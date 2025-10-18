@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>심리치료 AI 챗봇 - 성장형 메인</title>
+  <link href="https://fonts.googleapis.com/css2?family=Song+Myung&display=swap" rel="stylesheet">
+  <style>
+    body, button {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      background: linear-gradient(to top, #b7e0b7, #d9f2ff);
+      font-family: 'Song Myung', serif;
+      overflow: hidden;
+    }
+
+    .beanstalk {
+      position: relative;
+      width: 200px;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+    }
+
+    svg {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .stem {
+      fill: none;
+      stroke: #2a7b3f;
+      stroke-width: 14;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 0, 1000;
+      animation: grow 3s ease-out forwards;
+    }
+
+    @keyframes grow {
+      0% { stroke-dasharray: 0, 1000; }
+      100% { stroke-dasharray: 1000, 0; }
+    }
+
+    .leaf {
+      position: absolute;
+      background: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 80px;
+      height: 40px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: transform 0.3s, background 0.3s;
+      opacity: 0;
+      animation: fadeIn 1.5s forwards;
+    }
+
+    .leaf:hover {
+      transform: scale(1.1);
+      background: #43a047;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <div class="beanstalk">
+    <svg viewBox="0 0 200 600">
+      <path id="stemPath" class="stem" d="M100,600 C100,500 100,400 100,300 S100,150 100,50" />
+    </svg>
+
+    <!-- 첫 단계: 로그인, 회원가입 -->
+    <button id="loginBtn" class="leaf" style="left: 30%; bottom: 40%;">로그인</button>
+    <button id="signupBtn" class="leaf" style="right: 30%; bottom: 40%;">회원가입</button>
+  </div>
+
+  <script>
+    let stage = 1; // 성장 단계
+
+    const beanstalk = document.querySelector('.beanstalk');
+    const stemPath = document.getElementById('stemPath');
+
+    const loginBtn = document.getElementById('loginBtn');
+    const signupBtn = document.getElementById('signupBtn');
+
+    // 줄기 연장 함수
+    function growStem() {
+      stemPath.style.animation = 'none';
+      void stemPath.offsetWidth; // 강제 리플로우 (애니메이션 리셋)
+      stemPath.style.animation = 'grow 3s ease-out forwards';
+    }
+
+    // 새 잎사귀 추가
+    function addLeaf(label, position, callback) {
+      const leaf = document.createElement('button');
+      leaf.className = 'leaf';
+      leaf.textContent = label;
+
+      if (position === 'left') {
+        leaf.style.left = '35%';
+        leaf.style.bottom = `${50 + stage * 10}%`;
+      } else {
+        leaf.style.right = '35%';
+        leaf.style.bottom = `${50 + stage * 10}%`;
+      }
+
+      leaf.onclick = callback;
+      beanstalk.appendChild(leaf);
+    }
+
+    // 다음 단계로 성장
+    function nextStage() {
+      stage++;
+      growStem();
+    }
+
+    // 로그인/회원가입 완료 시
+    function handleAuth(action) {
+      alert(`${action} 완료! 줄기가 자랍니다 🌱`);
+      nextStage();
+
+      // 기존 잎 제거
+      loginBtn.remove();
+      signupBtn.remove();
+
+      // 새 잎 (설문조사)
+      setTimeout(() => {
+        addLeaf('설문조사', 'left', handleSurvey);
+      }, 3000);
+    }
+
+    // 설문조사 완료 시
+    function handleSurvey() {
+      alert('설문조사 완료! 줄기가 또 자랍니다 🌿');
+      nextStage();
+
+      // 설문 잎 제거
+      document.querySelectorAll('.leaf').forEach(leaf => leaf.remove());
+
+      // 다시 메인 페이지 버튼 등장
+      setTimeout(() => {
+        addLeaf('메인으로', 'left', () => {
+          alert('메인으로 돌아갑니다!');
+          location.reload(); // 새로고침으로 처음 상태 복원
+        });
+      }, 3000);
+    }
+
+    // 이벤트 연결
+    loginBtn.onclick = () => handleAuth('로그인');
+    signupBtn.onclick = () => handleAuth('회원가입');
+  </script>
+</body>
+</html>

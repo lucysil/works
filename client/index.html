@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>키이사</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<style>
+html, body {
+  margin:0; padding:0; width:100%; height:100%;
+  font-family: 'Orbitron', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow:hidden; background:#0f0f1a; color:#fff;
+}
+canvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
+.container { position:absolute; top:0; left:0; width:100%; height:100%; display:flex; justify-content:center; align-items:center; flex-direction:column; z-index:1; transition:opacity 1s ease; }
+.hidden { opacity:0; pointer-events:none; }
+
+#mainPage h1 {
+  font-size:5rem; margin-bottom:60px;
+  background:linear-gradient(90deg,#4facfe,#00f2fe);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  animation:glow 2s ease-in-out infinite alternate;
+}
+@keyframes glow { 0%{text-shadow:0 0 10px #4facfe,0 0 20px #00f2fe;} 100%{text-shadow:0 0 20px #00f2fe,0 0 40px #4facfe;} }
+
+.btn {
+  display:inline-block; padding:15px 50px; margin:0 20px;
+  font-size:1.3rem; border:none; border-radius:50px; cursor:pointer;
+  background:linear-gradient(90deg,#4facfe,#00f2fe); color:#fff; font-weight:bold;
+  transition:transform 0.3s, box-shadow 0.3s;
+}
+.btn:hover { transform:translateY(-5px) scale(1.05); box-shadow:0 10px 20px rgba(78,172,254,0.5); }
+
+#chatPage { display:flex; width:100%; height:100%; opacity:0; transition:opacity 1s ease; perspective:1000px; }
+#chatPage.active { opacity:1; }
+
+#sidebar { width:220px; background-color:#202123; color:white; display:flex; flex-direction:column; padding:20px; box-sizing:border-box; }
+#sidebar h2 { margin:0 0 20px 0; font-weight:700; font-size:1.5rem; text-align:center; text-shadow:0 0 5px #4facfe,0 0 10px #00f2fe; }
+#chatList { flex-grow:1; overflow-y:auto; margin-bottom:20px; }
+.chat-item { padding:10px; margin-bottom:10px; background-color:#333538; border-radius:8px; cursor:pointer; user-select:none; transition:background-color 0.2s ease; }
+.chat-item:hover, .chat-item.active { background-color:#55585a; }
+#newChatBtn { padding:10px; background:linear-gradient(145deg,#4facfe,#00f2fe); border:none; border-radius:8px; color:white; font-weight:600; cursor:pointer; user-select:none; box-shadow:0 4px 8px rgba(78,172,254,0.3); transition:transform 0.3s, box-shadow 0.3s; }
+#newChatBtn:hover { transform:translateY(-3px) scale(1.05); box-shadow:0 8px 16px rgba(78,172,254,0.6); }
+
+#main { flex-grow:1; display:flex; flex-direction:column; background-color:white; box-shadow:inset 0 0 10px #ccc; }
+#chatHistory { flex-grow:1; padding:20px; overflow-y:auto; box-sizing:border-box; scroll-behavior:smooth; }
+.message { transform:translateY(20px) scale(0.95); opacity:0; animation:messageAppear 0.4s forwards; max-width:70%; margin-bottom:15px; padding:12px 16px; border-radius:12px; line-height:1.4; word-wrap:break-word; white-space:pre-wrap; }
+.user-message { background:linear-gradient(145deg,#2a73cc,#6fb1fc); color:#fff; margin-left:auto; border-bottom-right-radius:0; }
+.bot-message { background:linear-gradient(145deg,#e5e5ea,#c0c0c0); color:#000; margin-right:auto; border-bottom-left-radius:0; }
+
+#inputArea { padding:10px 20px; border-top:1px solid #ddd; display:flex; gap:10px; }
+#userInput { flex-grow:1; padding:10px; font-size:1rem; border-radius:8px; border:1px solid #ccc; outline:none; }
+#sendBtn { background:linear-gradient(145deg,#2a73cc,#6fb1fc); color:white; border:none; padding:10px 20px; border-radius:8px; font-weight:600; cursor:pointer; box-shadow:0 3px 6px rgba(42,115,204,0.3); transition:transform 0.3s, box-shadow 0.3s; }
+#sendBtn:hover { transform:translateY(-2px) scale(1.03); box-shadow:0 6px 12px rgba(42,115,204,0.5); }
+
+@keyframes messageAppear { to{ opacity:1; transform:translateY(0) scale(1); } }
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<div id="mainPage" class="container">
+  <h1>키이사</h1>
+  <div>
+    <button class="btn" id="loginBtn" action="auth/login">로그인</button>
+    <button class="btn" id="signupBtn" action="auth/signIn">회원가입</button>
+  </div>
+</div>
+
+<div id="chatPage">
+  <div id="sidebar">
+    <h2>키이사</h2>
+    <div id="chatList"></div>
+    <button id="newChatBtn">+ 새 채팅</button>
+  </div>
+  <div id="main">
+    <div id="chatHistory"></div>
+    <div id="inputArea">
+      <input type="text" id="userInput" placeholder="메시지를 입력하세요..." autocomplete="off" />
+      <button id="sendBtn">보내기</button>
+    </div>
+  </div>
+</div>
+
+<script src="./chatbot.js"></script>
+<script>
+const canvas = document.getElementById('bg');
+const ctx = canvas.getContext('2d');
+let w,h;
+function resize(){ w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight; }
+window.addEventListener('resize',resize); resize();
+
+class Particle { constructor(){this.reset();}
+reset(){this.x=Math.random()*w;this.y=Math.random()*h;this.r=Math.random()*3+1;this.vx=(Math.random()-0.5)*0.5;this.vy=(Math.random()-0.5)*0.5;this.a=Math.random()*0.5+0.3;}
+update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>w||this.y<0||this.y>h)this.reset();}
+draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`rgba(78,172,254,${this.a})`;ctx.fill();}}
+
+let particles=[]; for(let i=0;i<200;i++) particles.push(new Particle());
+let animId;
+function animate(){
+  ctx.clearRect(0,0,w,h);
+  for(let p of particles){p.update();p.draw();}
+  for(let i=0;i<particles.length;i++){
+    for(let j=i+1;j<particles.length;j++){
+      let dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<100){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);
+      ctx.strokeStyle=`rgba(78,172,254,${0.2-dist/500})`;ctx.lineWidth=1;ctx.stroke();}
+    }
+  }
+  animId=requestAnimationFrame(animate);
+}
+animate();
+
+const mainPage=document.getElementById('mainPage');
+const chatPage=document.getElementById('chatPage');
+const loginBtn=document.getElementById('loginBtn');
+const signupBtn=document.getElementById('signupBtn');
+
+loginBtn.addEventListener('click', () => {
+  window.location.href = './login.html';  // ✅ login.html로 이동
+});
+
+signupBtn.addEventListener('click', () => {
+  window.location.href = './signup.html'; // ✅ signup.html로 이동
+});
+
+document.getElementById('loginBtn').addEventListener('click',()=>{
+  mainPage.classList.add('hidden');
+  chatPage.classList.add('active');
+  canvas.style.display='none';
+  cancelAnimationFrame(animId);
+});
+document.getElementById('signupBtn').addEventListener('click',()=>{
+  mainPage.classList.add('hidden');
+  chatPage.classList.add('active');
+  canvas.style.display='none';
+  cancelAnimationFrame(animId);
+});
+</script>
+</body>
+</html>

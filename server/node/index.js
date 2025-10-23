@@ -41,6 +41,12 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../../client/index.html'));
 });
 
+// chat 페이지 라우트
+app.get('/chat', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../client/index.html'));
+});
+
+
 // 서버 시작
 app.listen(PORT, () => {
   console.log(`✅ Node.js 서버가 http://localhost:${PORT} 에서 실행 중`);

@@ -52,6 +52,27 @@ router.post('/signup', (req, res) => {
   res.redirect('/auth'); // /auth/ 페이지로 이동
 });
 
+// 로그인 라우트
+router.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  const user = db.get(username);
+
+  if (!user || user.password !== password) {
+    return res.status(401).send('❌ 아이디 또는 비밀번호가 올바르지 않습니다.');
+  }
+
+  // 로그인 성공 시 쿠키에 유저정보 저장
+  res.cookie(USER_COOKIE_KEY, JSON.stringify(user), {
+  httpOnly: false,      // JS에서 읽을 수 있게
+  sameSite: 'Lax',      // 크로스 사이트 문제 방지
+  path: '/'             // 전체 경로에서 유효
+});
+
+  // ✅ 로그인 성공 시 바로 chatPage로 이동
+  res.redirect('/chat');
+});
+
+
 router.get('/logout', logout);
 
 module.exports = router;

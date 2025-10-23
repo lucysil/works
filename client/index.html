@@ -3,11 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <title>키이사</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
 <style>
 html, body {
   margin:0; padding:0; width:100%; height:100%;
-  font-family: 'Orbitron', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
   overflow:hidden; background:#0f0f1a; color:#fff;
 }
 canvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
@@ -30,29 +32,143 @@ canvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
 }
 .btn:hover { transform:translateY(-5px) scale(1.05); box-shadow:0 10px 20px rgba(78,172,254,0.5); }
 
-#chatPage { display:flex; width:100%; height:100%; opacity:0; transition:opacity 1s ease; perspective:1000px; }
+#chatPage {
+  display: flex;
+  width: 90%;
+  max-width: 1000px;
+  height: 80%;
+  background: #e6f5f4;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
 #chatPage.active { opacity:1; }
 
-#sidebar { width:220px; background-color:#202123; color:white; display:flex; flex-direction:column; padding:20px; box-sizing:border-box; }
-#sidebar h2 { margin:0 0 20px 0; font-weight:700; font-size:1.5rem; text-align:center; text-shadow:0 0 5px #4facfe,0 0 10px #00f2fe; }
-#chatList { flex-grow:1; overflow-y:auto; margin-bottom:20px; }
-.chat-item { padding:10px; margin-bottom:10px; background-color:#333538; border-radius:8px; cursor:pointer; user-select:none; transition:background-color 0.2s ease; }
-.chat-item:hover, .chat-item.active { background-color:#55585a; }
-#newChatBtn { padding:10px; background:linear-gradient(145deg,#4facfe,#00f2fe); border:none; border-radius:8px; color:white; font-weight:600; cursor:pointer; user-select:none; box-shadow:0 4px 8px rgba(78,172,254,0.3); transition:transform 0.3s, box-shadow 0.3s; }
-#newChatBtn:hover { transform:translateY(-3px) scale(1.05); box-shadow:0 8px 16px rgba(78,172,254,0.6); }
+#sidebar {
+  width: 230px;
+  background: #6fbcb6;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+  color: #fff;
+}
+#sidebar h2 {
+  font-weight: 700;
+  font-size: 1.6rem;
+  text-align: center;
+  margin: 0 0 20px 0;
+}
+#chatList {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+.chat-item {
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.chat-item:hover {
+  background: rgba(255,255,255,0.35);
+}
+#newChatBtn {
+  background: #fff;
+  color: #4aa49d;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+#newChatBtn:hover {
+  background: #d8f0ef;
+  transform: translateY(-2px);
+}
 
-#main { flex-grow:1; display:flex; flex-direction:column; background-color:white; box-shadow:inset 0 0 10px #ccc; }
-#chatHistory { flex-grow:1; padding:20px; overflow-y:auto; box-sizing:border-box; scroll-behavior:smooth; }
-.message { transform:translateY(20px) scale(0.95); opacity:0; animation:messageAppear 0.4s forwards; max-width:70%; margin-bottom:15px; padding:12px 16px; border-radius:12px; line-height:1.4; word-wrap:break-word; white-space:pre-wrap; }
-.user-message { background:linear-gradient(145deg,#2a73cc,#6fb1fc); color:#fff; margin-left:auto; border-bottom-right-radius:0; }
-.bot-message { background:linear-gradient(145deg,#e5e5ea,#c0c0c0); color:#000; margin-right:auto; border-bottom-left-radius:0; }
+#main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #f7fffe;
+  color: #333;
+}
+#chatHistory {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.message {
+  max-width: 70%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-size: 0.95rem;
+  animation: fadeIn 0.3s ease forwards;
+  opacity: 0;
+}
+.user-message {
+  background: #4aa49d;
+  color: #fff;
+  margin-left: auto;
+  border-bottom-right-radius: 4px;
+}
+.bot-message {
+  background: #e4f2f1;
+  color: #333;
+  margin-right: auto;
+  border-bottom-left-radius: 4px;
+}
 
-#inputArea { padding:10px 20px; border-top:1px solid #ddd; display:flex; gap:10px; }
-#userInput { flex-grow:1; padding:10px; font-size:1rem; border-radius:8px; border:1px solid #ccc; outline:none; }
-#sendBtn { background:linear-gradient(145deg,#2a73cc,#6fb1fc); color:white; border:none; padding:10px 20px; border-radius:8px; font-weight:600; cursor:pointer; box-shadow:0 3px 6px rgba(42,115,204,0.3); transition:transform 0.3s, box-shadow 0.3s; }
-#sendBtn:hover { transform:translateY(-2px) scale(1.03); box-shadow:0 6px 12px rgba(42,115,204,0.5); }
 
-@keyframes messageAppear { to{ opacity:1; transform:translateY(0) scale(1); } }
+#inputArea {
+  display: flex;
+  gap: 8px;
+  padding: 16px 20px;
+  border-top: 1px solid #d8e9e8;
+  background: #fff;
+  box-sizing: border-box;
+}
+#userInput {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #c4e1df;
+  outline: none;
+  font-size: 1rem;
+  font-family: inherit;
+}
+#userInput:focus {
+  border-color: #4aa49d;
+}
+#sendBtn {
+  background: #4aa49d;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+#sendBtn:hover {
+  background: #63bdb5;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(6px); }
+}
 </style>
 </head>
 <body>
@@ -67,7 +183,7 @@ canvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
   </div>
 </div>
 
-<div id="chatPage">
+<div id="chatPage" style="display: none;">
   <div id="sidebar">
     <h2>키이사</h2>
     <div id="chatList"></div>
@@ -124,18 +240,51 @@ signupBtn.addEventListener('click', () => {
   window.location.href = './signup.html'; // ✅ signup.html로 이동
 });
 
-document.getElementById('loginBtn').addEventListener('click',()=>{
-  mainPage.classList.add('hidden');
-  chatPage.classList.add('active');
-  canvas.style.display='none';
-  cancelAnimationFrame(animId);
+
+window.addEventListener('DOMContentLoaded', () => {
+  const mainPage = document.getElementById('mainPage');
+  const chatPage = document.getElementById('chatPage');
+  const canvas = document.getElementById('bg');
+
+  // 항상 메인페이지부터 시작
+  chatPage.style.display = 'none';
+  mainPage.style.display = 'flex';
+  canvas.style.display = 'block';
+
+  if (document.cookie.includes('USER=')) {
+    showChatPage();
+  }
 });
-document.getElementById('signupBtn').addEventListener('click',()=>{
-  mainPage.classList.add('hidden');
-  chatPage.classList.add('active');
-  canvas.style.display='none';
-  cancelAnimationFrame(animId);
-});
+
+function showChatPage() {
+  const main = document.getElementById('mainPage');
+  const chat = document.getElementById('chatPage');
+  const canvas = document.getElementById('bg');
+
+  // 페이드아웃
+  main.style.opacity = '0';
+  canvas.style.opacity = '0';
+
+  setTimeout(() => {
+    main.style.display = 'none';
+    canvas.style.display = 'none';
+    chat.style.display = 'flex';
+    chat.style.opacity = '0';
+
+    // 페이드인
+    setTimeout(() => {
+      chat.style.transition = 'opacity 0.8s ease';
+      chat.style.opacity = '1';
+    }, 50);
+  }, 500);
+}
+
+  // 로그인 성공 시 실행 (예시)
+  function login() {
+    // 여기에 실제 로그인 로직 넣고 성공 시:
+    showChatPage();
+  }
+
 </script>
 </body>
 </html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>MBTI 선택</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: "Noto Sans KR", sans-serif;
+      background: linear-gradient(135deg, #74ABE2, #5563DE);
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 40px;
+    }
+
+    .mbti-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 100px);
+      gap: 15px;
+    }
+
+    button {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 1rem;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: rgba(255,255,255,0.4);
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <h1>원하는 대화 상대를 선택하세요</h1>
+  <div class="mbti-grid">
+    <button onclick="selectMBTI('INTJ')">INTJ</button>
+    <button onclick="selectMBTI('INTP')">INTP</button>
+    <button onclick="selectMBTI('ENTJ')">ENTJ</button>
+    <button onclick="selectMBTI('ENTP')">ENTP</button>
+    <button onclick="selectMBTI('INFJ')">INFJ</button>
+    <button onclick="selectMBTI('INFP')">INFP</button>
+    <button onclick="selectMBTI('ENFJ')">ENFJ</button>
+    <button onclick="selectMBTI('ENFP')">ENFP</button>
+    <button onclick="selectMBTI('ISTJ')">ISTJ</button>
+    <button onclick="selectMBTI('ISFJ')">ISFJ</button>
+    <button onclick="selectMBTI('ESTJ')">ESTJ</button>
+    <button onclick="selectMBTI('ESFJ')">ESFJ</button>
+    <button onclick="selectMBTI('ISTP')">ISTP</button>
+    <button onclick="selectMBTI('ISFP')">ISFP</button>
+    <button onclick="selectMBTI('ESTP')">ESTP</button>
+    <button onclick="selectMBTI('ESFP')">ESFP</button>
+  </div>
+
+  <script>
+    function selectMBTI(type) {
+      // 선택한 MBTI를 로컬 스토리지에 저장
+      localStorage.setItem('USER_MBTI', type);
+      // index.html로 이동
+      window.location.href = '/index.html';
+    }
+  </script>
+</body>
+</html>

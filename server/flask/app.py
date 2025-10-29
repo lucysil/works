@@ -7,7 +7,7 @@ import requests
 import os
 
 HF_TOKEN = os.getenv("HF_TOKEN")
-MODEL_NAME = "Lucysil/zephyr-lora-korean"
+MODEL_NAME = "Lucysil/my-tinyllama-lora-chatbot"
 HF_API_URL = f"https://api-inference.huggingface.co/models/{MODEL_NAME}"
 
 app = Flask(__name__)

@@ -168,7 +168,7 @@ async function sendMessage() {
 
   try {
     // ✅ Flask 서버로 요청 (5000 포트, /generate 라우트)
-    const res = await fetch('http://localhost:5000/generate', {
+    const res = await fetch('http://172.28.0.12:5000', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt: text })

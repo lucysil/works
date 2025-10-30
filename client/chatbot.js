@@ -1,5 +1,5 @@
 // chatbot.js
-const FLASK_URL = "https://your-ngrok-url.ngrok.io"; // ← 여기에 Colab ngrok 주소
+const FLASK_URL = "http://172.28.0.12:5000"; // ← 여기에 Colab ngrok 주소
 const chatHistory = document.getElementById("chatHistory");
 const sendBtn = document.getElementById("sendBtn");
 const userInput = document.getElementById("userInput");

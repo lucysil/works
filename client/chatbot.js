@@ -6,7 +6,7 @@ const userInput = document.getElementById("userInput");
 
 // 로그인 확인
 window.addEventListener("DOMContentLoaded", async () => {
-  const res = await fetch("http://localhost:3000/auth/check", { credentials: "include" });
+  const res = await fetch("https://overflowingly-closefisted-samir.ngrok-free.dev", { credentials: "include" });
   const data = await res.json();
 
   if (!data.loggedIn) {

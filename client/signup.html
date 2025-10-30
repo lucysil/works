@@ -1,99 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
-  <title>Sign Up</title>
-  <style>
-    body {
-      font-family: "Noto Sans KR", sans-serif;
-      background: linear-gradient(135deg, #74ABE2, #5563DE);
-      height: 100vh;
-      margin: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .signup-container {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.15);
-      width: 340px;
-      text-align: center;
-      color: #fff;
-    }
-
-    h1 {
-      margin-bottom: 25px;
-      font-size: 1.8rem;
-      letter-spacing: 0.5px;
-    }
-
-    label {
-      display: block;
-      margin: 10px 0 5px;
-      text-align: left;
-      font-size: 0.9rem;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-      outline: none;
-      font-size: 1rem;
-    }
-
-    button {
-      width: 100%;
-      margin-top: 25px;
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: bold;
-      background-color: #fff;
-      color: #333;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    button:hover {
-      background-color: #e2e2e2;
-    }
-
-    .link {
-      margin-top: 15px;
-      display: block;
-      font-size: 0.9rem;
-      color: #fff;
-      text-decoration: underline;
-    }
-  </style>
+<meta charset="UTF-8"><title>회원가입</title>
+<style>
+body{background:#0f0f1a;color:#fff;display:flex;justify-content:center;align-items:center;height:100vh;font-family:"Noto Sans KR",sans-serif;}
+form{background:#1e1e2e;padding:40px;border-radius:20px;display:flex;flex-direction:column;gap:20px;width:300px;}
+input,button{padding:10px;border:none;border-radius:10px;outline:none;}
+button{background:linear-gradient(90deg,#4facfe,#00f2fe);color:#fff;font-weight:bold;cursor:pointer;}
+</style>
 </head>
 <body>
-  <div class="signup-container">
-    <h1>Create Account</h1>
-    <form method="POST" action="/auth/signup">
-      <label for="username">Username</label>
-      <input type="text" name="username" required />
+<form id="signupForm">
+<h2>회원가입</h2>
+<input id="username" placeholder="아이디" required>
+<input id="password" type="password" placeholder="비밀번호" required>
+<button>가입하기</button>
+</form>
 
-      <label for="name">Name</label>
-      <input type="text" name="name" required />
+<script>
+document.getElementById('signupForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const username=document.getElementById('username').value.trim();
+  const password=document.getElementById('password').value.trim();
 
-      <label for="password">Password</label>
-      <input type="password" name="password" required />
-
-      <button type="submit">Sign Up</button>
-    </form>
-    <a class="link" href="/login.html">Already have an account?</a>
-  </div>
+  const res=await fetch('http://localhost:3000/auth/signup',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({username,password})
+  });
+  const data=await res.json();
+  alert(data.message);
+  if(data.success)location.href='./login.html';
+});
+</script>
 </body>
 </html>

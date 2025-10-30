@@ -27,7 +27,7 @@ def generate():
             "parameters": {"max_new_tokens": 100, "temperature": 0.8, "top_p": 0.95}
         }
 
-        response = requests.post(HF_API_URL, headers=headers, json=payload, timeout=60)
+        response = requests.post(HF_API_URL, headers=headers, json=payload, timeout=45)
 
         # 🔴 여기에 Hugging Face 응답 전체 로그 추가
         print("🔹 Status Code:", response.status_code)
@@ -52,4 +52,5 @@ def generate():
 
 
 if __name__ == "__main__":
-    app.run(port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)

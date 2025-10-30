@@ -13,6 +13,7 @@ html, body {
   overflow:hidden; background:#0f0f1a; color:#fff;
 }
 canvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
+
 .container { position:absolute; top:0; left:0; width:100%; height:100%; display:flex; justify-content:center; align-items:center; flex-direction:column; z-index:1; transition:opacity 1s ease; }
 .hidden { opacity:0; pointer-events:none; }
 
@@ -53,137 +54,54 @@ canvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
   box-sizing: border-box;
   color: #fff;
 }
-#sidebar h2 {
-  font-weight: 700;
-  font-size: 1.6rem;
-  text-align: center;
-  margin: 0 0 20px 0;
-}
-#chatList {
-  flex: 1;
-  overflow-y: auto;
-  padding-right: 5px;
-}
-.chat-item {
-  padding: 10px 12px;
-  background: rgba(255,255,255,0.2);
-  border-radius: 10px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-.chat-item:hover {
-  background: rgba(255,255,255,0.35);
-}
-#newChatBtn {
-  background: #fff;
-  color: #4aa49d;
-  border: none;
-  padding: 10px;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
-}
-#newChatBtn:hover {
-  background: #d8f0ef;
-  transform: translateY(-2px);
-}
+#sidebar h2 { font-weight:700; font-size:1.6rem; text-align:center; margin:0 0 20px 0; }
+#chatList { flex:1; overflow-y:auto; padding-right:5px; }
+.chat-item { padding:10px 12px; background: rgba(255,255,255,0.2); border-radius:10px; margin-bottom:10px; cursor:pointer; transition: background 0.2s ease; }
+.chat-item:hover { background: rgba(255,255,255,0.35); }
+#newChatBtn { background:#fff; color:#4aa49d; border:none; padding:10px; border-radius:10px; font-weight:600; cursor:pointer; transition: background 0.2s ease, transform 0.2s ease; }
+#newChatBtn:hover { background:#d8f0ef; transform:translateY(-2px); }
 
-#main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background: #f7fffe;
-  color: #333;
-}
-#chatHistory {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.message {
-  max-width: 70%;
-  padding: 10px 14px;
-  border-radius: 14px;
-  line-height: 1.4;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  font-size: 0.95rem;
-  animation: fadeIn 0.3s ease forwards;
-  opacity: 0;
-}
-.user-message {
-  background: #4aa49d;
-  color: #fff;
-  margin-left: auto;
-  border-bottom-right-radius: 4px;
-}
-.bot-message {
-  background: #e4f2f1;
-  color: #333;
-  margin-right: auto;
-  border-bottom-left-radius: 4px;
-}
+#main { flex:1; display:flex; flex-direction:column; background:#f7fffe; color:#333; }
+#chatHistory { flex:1; padding:20px; overflow-y:auto; box-sizing:border-box; display:flex; flex-direction:column; gap:12px; }
+.message { max-width:70%; padding:10px 14px; border-radius:14px; line-height:1.4; white-space:pre-wrap; word-wrap:break-word; font-size:0.95rem; animation:fadeIn 0.3s ease forwards; opacity:0; }
+.user-message { background:#4aa49d; color:#fff; margin-left:auto; border-bottom-right-radius:4px; }
+.bot-message { background:#e4f2f1; color:#333; margin-right:auto; border-bottom-left-radius:4px; }
 
+#inputArea { display:flex; gap:8px; padding:16px 20px; border-top:1px solid #d8e9e8; background:#fff; box-sizing:border-box; }
+#userInput { flex:1; padding:10px; border-radius:8px; border:1px solid #c4e1df; outline:none; font-size:1rem; font-family:inherit; }
+#userInput:focus { border-color:#4aa49d; }
+#sendBtn { background:#4aa49d; color:#fff; border:none; padding:10px 20px; border-radius:8px; font-weight:600; cursor:pointer; transition: background 0.2s ease; }
+#sendBtn:hover { background:#63bdb5; }
 
-#inputArea {
-  display: flex;
-  gap: 8px;
-  padding: 16px 20px;
-  border-top: 1px solid #d8e9e8;
-  background: #fff;
-  box-sizing: border-box;
-}
-#userInput {
-  flex: 1;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #c4e1df;
-  outline: none;
-  font-size: 1rem;
-  font-family: inherit;
-}
-#userInput:focus {
-  border-color: #4aa49d;
-}
-#sendBtn {
-  background: #4aa49d;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-#sendBtn:hover {
-  background: #63bdb5;
-}
-
-@keyframes fadeIn {
-  to { opacity: 1; transform: translateY(0); }
-  from { opacity: 0; transform: translateY(6px); }
-}
+@keyframes fadeIn { to { opacity:1; transform:translateY(0); } from { opacity:0; transform:translateY(6px); } }
 </style>
 </head>
 <body>
-
 <canvas id="bg"></canvas>
 
+<!-- 메인 페이지 -->
 <div id="mainPage" class="container">
   <h1>키이사</h1>
   <div>
-    <button class="btn" id="loginBtn" action="auth/login">로그인</button>
-    <button class="btn" id="signupBtn" action="auth/signIn">회원가입</button>
+    <button class="btn" id="loginBtn">로그인</button>
+    <button class="btn" id="signupBtn">회원가입</button>
   </div>
 </div>
 
-<div id="chatPage" style="display: none;">
+<!-- MBTI 선택 페이지 -->
+<div id="mbtiPage" class="container" style="display:none;">
+  <h1>당신의 MBTI를 선택해주세요</h1>
+  <div>
+    <button class="btn mbtiBtn" data-mbti="INTJ">INTJ</button>
+    <button class="btn mbtiBtn" data-mbti="INFJ">INFJ</button>
+    <button class="btn mbtiBtn" data-mbti="ENFP">ENFP</button>
+    <button class="btn mbtiBtn" data-mbti="ISTP">ISTP</button>
+    <!-- 원하는 MBTI 추가 가능 -->
+  </div>
+</div>
+
+<!-- 채팅 페이지 -->
+<div id="chatPage" style="display:none;">
   <div id="sidebar">
     <h2>키이사</h2>
     <div id="chatList"></div>
@@ -198,93 +116,56 @@ canvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
   </div>
 </div>
 
-<script src="./chatbot.js"></script>
 <script>
+const mainPage = document.getElementById('mainPage');
+const mbtiPage = document.getElementById('mbtiPage');
+const chatPage = document.getElementById('chatPage');
+const loginBtn = document.getElementById('loginBtn');
+const signupBtn = document.getElementById('signupBtn');
+const mbtiBtns = document.querySelectorAll('.mbtiBtn');
 const canvas = document.getElementById('bg');
-const ctx = canvas.getContext('2d');
-let w,h;
-function resize(){ w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight; }
-window.addEventListener('resize',resize); resize();
 
-class Particle { constructor(){this.reset();}
-reset(){this.x=Math.random()*w;this.y=Math.random()*h;this.r=Math.random()*3+1;this.vx=(Math.random()-0.5)*0.5;this.vy=(Math.random()-0.5)*0.5;this.a=Math.random()*0.5+0.3;}
-update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>w||this.y<0||this.y>h)this.reset();}
-draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`rgba(78,172,254,${this.a})`;ctx.fill();}}
-
-let particles=[]; for(let i=0;i<200;i++) particles.push(new Particle());
-let animId;
-function animate(){
-  ctx.clearRect(0,0,w,h);
-  for(let p of particles){p.update();p.draw();}
-  for(let i=0;i<particles.length;i++){
-    for(let j=i+1;j<particles.length;j++){
-      let dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,dist=Math.sqrt(dx*dx+dy*dy);
-      if(dist<100){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);
-      ctx.strokeStyle=`rgba(78,172,254,${0.2-dist/500})`;ctx.lineWidth=1;ctx.stroke();}
-    }
-  }
-  animId=requestAnimationFrame(animate);
-}
-animate();
-
-const mainPage=document.getElementById('mainPage');
-const chatPage=document.getElementById('chatPage');
-const loginBtn=document.getElementById('loginBtn');
-const signupBtn=document.getElementById('signupBtn');
-
+// 버튼 이벤트
 loginBtn.addEventListener('click', () => {
-  window.location.href = './login.html';  // ✅ login.html로 이동
+  mainPage.style.display = 'none';
+  mbtiPage.style.display = 'flex';
 });
 
 signupBtn.addEventListener('click', () => {
-  window.location.href = './signup.html'; // ✅ signup.html로 이동
+  mainPage.style.display = 'none';
+  mbtiPage.style.display = 'flex';
 });
 
-
-window.addEventListener('DOMContentLoaded', () => {
-  const mainPage = document.getElementById('mainPage');
-  const chatPage = document.getElementById('chatPage');
-  const canvas = document.getElementById('bg');
-
-  // 항상 메인페이지부터 시작
-  chatPage.style.display = 'none';
-  mainPage.style.display = 'flex';
-  canvas.style.display = 'block';
-
-  if (document.cookie.includes('USER=')) {
+// MBTI 선택 시
+mbtiBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const selected = btn.dataset.mbti;
+    localStorage.setItem('USER_MBTI', selected);
+    mbtiPage.style.display = 'none';
     showChatPage();
+  });
+});
+
+// 페이지 로드 시
+window.addEventListener('DOMContentLoaded', () => {
+  if (localStorage.getItem('USER_MBTI')) {
+    showChatPage();
+  } else {
+    mainPage.style.display = 'flex';
+    canvas.style.display = 'block';
   }
 });
 
+// 채팅 페이지 표시
 function showChatPage() {
-  const main = document.getElementById('mainPage');
-  const chat = document.getElementById('chatPage');
-  const canvas = document.getElementById('bg');
-
-  // 페이드아웃
-  main.style.opacity = '0';
-  canvas.style.opacity = '0';
-
-  setTimeout(() => {
-    main.style.display = 'none';
-    canvas.style.display = 'none';
-    chat.style.display = 'flex';
-    chat.style.opacity = '0';
-
-    // 페이드인
-    setTimeout(() => {
-      chat.style.transition = 'opacity 0.8s ease';
-      chat.style.opacity = '1';
-    }, 50);
-  }, 500);
+  mainPage.style.display = 'none';
+  mbtiPage.style.display = 'none';
+  canvas.style.display = 'none';
+  chatPage.style.display = 'flex';
+  chatPage.style.opacity = '1';
 }
 
-  // 로그인 성공 시 실행 (예시)
-  function login() {
-    // 여기에 실제 로그인 로직 넣고 성공 시:
-    showChatPage();
-  }
-
+// TODO: 채팅 기능은 chatbot.js + Flask backend 연결 예정
 </script>
 </body>
 </html>

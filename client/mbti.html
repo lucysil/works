@@ -67,13 +67,14 @@
     <button onclick="selectMBTI('ESFP')">ESFP</button>
   </div>
 
-  <script>
-    function selectMBTI(type) {
-      // 선택한 MBTI를 로컬 스토리지에 저장
-      localStorage.setItem('USER_MBTI', type);
-      // index.html로 이동
-      window.location.href = '/index.html';
-    }
-  </script>
+<script>
+function selectMBTI(type) {
+  // 선택한 MBTI는 로컬스토리지에 저장 (선택만, 서버 전송 없음)
+  localStorage.setItem('USER_MBTI', type);
+
+  // 채팅방(index.html) 페이지로 이동
+  window.location.href = 'index.html';
+}
+</script>
 </body>
 </html>

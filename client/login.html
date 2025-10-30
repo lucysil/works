@@ -14,11 +14,11 @@ button{background:linear-gradient(90deg,#4facfe,#00f2fe);color:#fff;font-weight:
 <h2>로그인</h2>
 <input id="username" placeholder="아이디" required>
 <input id="password" type="password" placeholder="비밀번호" required>
-<button>로그인</button>
+<button id="loginBtn">로그인</button>
 </form>
 
 <!-- login.html -->
-<script>
+<!-- <script>
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -44,6 +44,13 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     console.error(error);
     alert("서버 오류 발생");
   }
+});
+</script> -->
+
+<script>
+document.getElementById('loginBtn').addEventListener('click', () => {
+  // 서버 없이 바로 MBTI 선택 페이지로 이동
+  window.location.href = 'mbti.html';
 });
 </script>
 
